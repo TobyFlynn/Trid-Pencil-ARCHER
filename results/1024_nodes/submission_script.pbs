@@ -1,0 +1,29 @@
+#!/bin/bash --login
+
+# PBS job options (name, compute nodes, job time)
+# PBS -N is the job name (e.g. Example_OMP_Job)
+#PBS -N ADIMPI
+# PBS -l select is the number of nodes requested (e.g. 1 node=24 cores)
+#PBS -l select=1024
+# PBS -l walltime, maximum walltime allowed (e.g. 12 hours)
+#PBS -l walltime=0:10:0
+
+# Replace [budget code] below with your project code (e.g. t01)
+#PBS -A e616
+
+# Make sure any symbolic links are resolved to absolute path
+export PBS_O_WORKDIR=$(readlink -f $PBS_O_WORKDIR)               
+
+# Change to the direcotry that the job was submitted from
+# (remember this should be on the /work filesystem)
+cd $PBS_O_WORKDIR
+
+# Set the number of threads to 1
+export OMP_NUM_THREADS=1
+
+export LD_LIBRARY_PATH=$(readlink -f ../../scalar/build/lib):$LD_LIBRARY_PATH
+
+export TRIDSOLVER_ADI_MPI_PATH=$(readlink -f ../../apps/adi/build)/adi_mpi_cpu
+
+# Launch the parallel job
+aprun -n 24576 $TRIDSOLVER_ADI_MPI_PATH -nx 3840 -ny 5760 -nz 5120 -iter 250 > my_stdout.txt 2> my_stderr.txt
