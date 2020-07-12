@@ -10,8 +10,8 @@ set(LIBTRID_PATH $ENV{TRIDSOLVER_INSTALL_PATH}
 
 if (INTEL_CC)
   # Detect/find Intel compilers
-  find_program(CMAKE_C_COMPILER NAMES   mpicc)
-  find_program(CMAKE_CXX_COMPILER NAMES mpicxx)
+  find_program(CMAKE_C_COMPILER NAMES   cc)
+  find_program(CMAKE_CXX_COMPILER NAMES CC)
   find_program(CMAKE_AR NAMES           xiar)
   find_program(CMAKE_LINKER NAMES       xild)
 
@@ -32,10 +32,10 @@ project("adi")
 
 if (INTEL_CC)
   # Set compiler flags/options for Intel compiler
-  set(FLAGS_INTEL_DEFAULT "-O3 -xMIC-AVX512 -xHost -m64 -parallel -qopenmp -no-offload -qopt-report=2 -qopt-report-phase=vec -qopt-report-file=stdout")
+  set(FLAGS_INTEL_DEFAULT "-std=c++0x -O3 -xMIC-AVX512 -xHost -m64 -parallel -qopenmp -no-offload -qopt-report=2 -qopt-report-phase=vec -qopt-report-file=stdout")
   #set(FLAGS_INTEL_DEFAULT "-xAVX -m64 -parallel -openmp -no-offload -qopt-report=2 -qopt-report-phase=vec -qopt-report=2 -qopt-report-phase=par") #-xCORE_AVX2
-  set(FLAGS_INTEL_DEBUG   "-O3 -xMIC-AVX512 -xHost -m64 -parallel -qopenmp -no-offload -qopt-report=2 -qopt-report-phase=vec -qopt-report-file=stdout -g")
-  set(FLAGS_INTEL_RELEASE "-O3 -xMIC-AVX512 -xHost -m64 -parallel -qopenmp -no-offload -qopt-report=2 -qopt-report-phase=vec -qopt-report-file=stdout") #-fp-model fast
+  set(FLAGS_INTEL_DEBUG   "-std=c++0x -O3 -xMIC-AVX512 -xHost -m64 -parallel -qopenmp -no-offload -qopt-report=2 -qopt-report-phase=vec -qopt-report-file=stdout -g")
+  set(FLAGS_INTEL_RELEASE "-std=c++0x -O3 -xMIC-AVX512 -xHost -m64 -parallel -qopenmp -no-offload -qopt-report=2 -qopt-report-phase=vec -qopt-report-file=stdout") #-fp-model fast
 
   set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS}       ${FLAGS_INTEL_DEFAULT}")
   set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG} ${FLAGS_INTEL_DEBUG}  ")
@@ -74,7 +74,7 @@ if (BUILD_FOR_CPU)
   add_executable(adi_cpu src/adi_cpu.cpp)
   #target_compile_options(adi_cpu PRIVATE -xAVX -parallel -openmp -no-offload)
   target_include_directories(adi_cpu PRIVATE ${LIBTRID_PATH}/include ${PROJECT_SOURCE_DIR}/include)
-  target_link_libraries(adi_cpu PRIVATE -L${LIBTRID_PATH}/lib -ltridcpu -L${INTEL_PATH}/compiler/lib/intel64 -limf -lintlc -lsvml -lirng -liomp5 -lcilkrts)
+  target_link_libraries(adi_cpu PRIVATE -L${LIBTRID_PATH}/lib -ltridcpu -L${INTEL_PATH}/compiler/lib/intel64 -limf -lsvml -lirng -liomp5)
 
   #/opt/intel/composer_xe_2015.3.187/bin/intel64/icc -O3 -xAVX -ip -restrict -parallel -fopenmp -openmp-report2 -qopt-report=2 -qopt-report-phase=vec -qopt-report=2 -qopt-report-phase=par  -DFPPREC=0  -DN_MAX=1024  -I./include -I./libtrid  -I./include -I./libtrid -I/opt/intel/composer_xe_2015.3.187/mkl/include   -D__LAPACKE__ src/adi_cpu.cpp -L/opt/intel/composer_xe_2015.3.187/mkl/lib/intel64 -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -L/opt/intel/composer_xe_2015.3.187/compiler/lib/intel64 -limf -lintlc -lsvml -lirng -liomp5 -lcilkrts -o adi_mkl
 
@@ -82,11 +82,11 @@ if (BUILD_FOR_CPU)
   target_compile_definitions(adi_mkl PRIVATE -D__MKL__)
   target_compile_options(adi_mkl PRIVATE -xAVX -parallel -qopenmp -no-offload)
   target_include_directories(adi_mkl PRIVATE ${INTEL_PATH}/mkl/include ${LIBTRID_PATH}/include ${PROJECT_SOURCE_DIR}/include)
-  target_link_libraries(adi_mkl -L${LIBTRID_PATH}/lib -ltridcpu -L${INTEL_PATH}/mkl/lib/intel64 -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -L${INTEL_PATH}/compiler/lib/intel64 -limf -lintlc -lsvml -lirng -liomp5 -lcilkrts)
+  target_link_libraries(adi_mkl -L${LIBTRID_PATH}/lib -ltridcpu -L${INTEL_PATH}/mkl/lib/intel64 -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -L${INTEL_PATH}/compiler/lib/intel64 -limf -lsvml -lirng -liomp5)
 
   add_executable(adi_mpi_cpu src/adi_mpi_cpu.cpp)
   target_include_directories(adi_mpi_cpu PRIVATE ${INTEL_PATH}/mkl/include ${LIBTRID_PATH}/include ${PROJECT_SOURCE_DIR}/include ${MPI_PATH}/include)
-  target_link_libraries(adi_mpi_cpu PRIVATE -L${LIBTRID_PATH}/lib -ltridcpu -L${INTEL_PATH}/compiler/lib/intel64 -L${MPI_PATH}/lib -lmpi -limf -lintlc -lsvml -lirng -liomp5 -lcilkrts)
+  target_link_libraries(adi_mpi_cpu PRIVATE -L${LIBTRID_PATH}/lib -ltridcpu -L${INTEL_PATH}/compiler/lib/intel64 -L${MPI_PATH}/lib -limf -lsvml -lirng -liomp5)
 
 endif (BUILD_FOR_CPU)
 
