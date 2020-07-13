@@ -164,10 +164,10 @@ endif (BUILD_FOR_GPU)
 
 
 #target_link_libraries(adi_cpu tridcpu)
-add_executable(adi_orig ${PROJECT_SOURCE_DIR}/src/adi_orig.c)
+#add_executable(adi_orig ${PROJECT_SOURCE_DIR}/src/adi_orig.c)
 
-add_executable(compare ${PROJECT_SOURCE_DIR}/src/compare.c)
-target_include_directories(compare PRIVATE ${LIBTRID_PATH}/include)
+#add_executable(compare ${PROJECT_SOURCE_DIR}/src/compare.c)
+#target_include_directories(compare PRIVATE ${LIBTRID_PATH}/include)
 
 
 
