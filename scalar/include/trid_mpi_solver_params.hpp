@@ -54,7 +54,7 @@ struct MpiSolverParams {
     MPI_Cart_coords(cartesian_communicator, cart_rank, num_dims,
                     this->mpi_coords.data());
     for (int equation_dim = 0; equation_dim < num_dims; ++equation_dim) {
-      std::vector<int> neighbours = {cart_rank};
+      std::vector<int> neighbours {cart_rank};
       int mpi_coord = this->mpi_coords[equation_dim];
       // Collect the processes in the same row/column
       for (int i = 1; i <= std::max(num_mpi_procs[equation_dim] - mpi_coord - 1,

@@ -34,7 +34,7 @@ project("libtrid")
 
 if (INTEL_CC)
   # Set compiler flags/options for Intel compiler
-  set(FLAGS_INTEL_DEFAULT "-std=c++0x -O3 -xHost -m64 -parallel -qopenmp -qno-offload")
+  set(FLAGS_INTEL_DEFAULT "-std=c++14 -O3 -xHost -m64 -parallel -qopenmp -qno-offload")
   if (PRODUCE_OPT_REPORT)
     set(FLAGS_INTEL_DEFAULT "${FLAGS_INTEL_DEFAULT} -qopt-report=2 -qopt-report-phase=vec -qopt-report-file=stdout")
   endif (PRODUCE_OPT_REPORT)
